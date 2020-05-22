@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import entities.ColorType.colorTypes;
 import entities.GroceryList;
 import entities.Item;
 import entities.User;
@@ -73,6 +74,32 @@ static float computeBurndownRateOfProduct(Item item) throws ParseException {
 			 message ="Waste level in normal limits " ;
 		 }
 		return message;
+	}
+	
+	
+	
+	public static colorTypes getWasteColor(User user) throws ParseException, IOException {
+	
+		  List<Item> usersLists = ListRequests.getAll(user.getId());
+	      colorTypes color;
+		 
+		 float sum = 0;
+		 
+		 for(Item item : usersLists) {
+			 if(item.getConsumptionDate()==null || new SimpleDateFormat("dd/MM/yyyy").parse(item.getConsumptionDate()).getYear()<2020 || new SimpleDateFormat("dd/MM/yyyy").parse(item.getConsumptionDate()).getYear()>2021) {//at first I added wrongly some values for the conumption date
+				if( new SimpleDateFormat("dd/MM/yyyy").parse(item.getExpirationDate()).after(new Date()))
+				 sum += computeBurndownRateOfProduct(item); 
+			 }
+		 }
+		 
+		 if(sum > user.getCaloric_goal()) {
+			 float val = sum - user.getCaloric_goal();
+			 color = colorTypes.Red;
+		 }
+		 else {
+			 color = colorTypes.Green;
+		 }
+		return color;
 	}
 
 	

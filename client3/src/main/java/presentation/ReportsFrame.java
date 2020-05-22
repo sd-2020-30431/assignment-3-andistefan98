@@ -3,6 +3,7 @@ package presentation;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,10 +15,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
+import com.itextpdf.text.DocumentException;
+
 import business.AbstractFactory;
-import business.ReportCreator;
+import business.BurnDownRateCalculator;
+
+import decorator.GreenReportDecorator;
+import decorator.RedReportDecorator;
+import decorator.ReportDecorator;
+import entities.ColorType.colorTypes;
 import entities.GroceryList;
 import entities.Item;
+import entities.PlainReport;
 import entities.Report;
 import entities.ReportType.reportTypes;
 import entities.User;
@@ -78,7 +87,7 @@ public class ReportsFrame {
 		panel.setLayout(null);
 		
 		JButton WeeklyBtn = new JButton("Weekly");
-		WeeklyBtn.setBounds(64, 40, 135, 37);
+		WeeklyBtn.setBounds(154, 40, 175, 57);
 		WeeklyBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -92,8 +101,7 @@ public class ReportsFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
-				
+							
 				List<Item> itemsOfUser = new ArrayList<Item>();
 				
 			 for(Item itm : usersLists) {
@@ -101,46 +109,57 @@ public class ReportsFrame {
 				 itemsOfUser.add(itm);
 				 
 				}
-		
+			 
+			 
+		Report rep;
 			//ReportFactory fct = new ReportFactory(reportTypes.Weekly , itemsOfUser); 
-			 AbstractFactory fct = ReportCreator.getFactory(reportTypes.Weekly, itemsOfUser);
-			 Report rep=fct.getReport(reportTypes.Weekly, itemsOfUser);  
-				
+			 //AbstractFactory fct = ReportCreator.getFactory(reportTypes.Weekly, itemsOfUser);
+			 colorTypes type = colorTypes.Green;
+			try {
+				type = BurnDownRateCalculator.getWasteColor(user);
+			} catch (ParseException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
 			}
+			
+			
+			 			 
+			 if(type == colorTypes.Red) {
+				 
+			  try {
+				rep= new RedReportDecorator(new PlainReport(itemsOfUser),itemsOfUser) ;
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (DocumentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
+			 }
+			 else {
+				 
+		      try {
+		    	  System.out.println(itemsOfUser.toString());
+				rep= new GreenReportDecorator(new PlainReport(itemsOfUser),itemsOfUser) ;
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (DocumentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
+			 }
+				
+		}
 		});
 		panel.add(WeeklyBtn);
-		
-		JButton monthlyBtn = new JButton("Monthly");
-		monthlyBtn.setBounds(246, 40, 135, 37);
-		monthlyBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				Iterable<Item> usersLists = null;
-				try {
-					usersLists = ListRequests.getAll(user.getId());
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-					
-				
-				List<Item> itemsOfUser = new ArrayList<Item>();
-				
-			 for(Item itm : usersLists) {
-				 
-				itemsOfUser.add(itm);
-				}
-		
-			//ReportFactory fct = new ReportFactory(reportTypes.Monthly , itemsOfUser); 
-			 AbstractFactory fct = ReportCreator.getFactory(reportTypes.Monthly, itemsOfUser);
-			 Report rep=fct.getReport(reportTypes.Monthly, itemsOfUser);  
-				
-			}
-		});
-		panel.add(monthlyBtn);
 		
 	
 		textPane.setBounds(64, 123, 317, 197);
