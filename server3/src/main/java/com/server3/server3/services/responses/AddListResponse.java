@@ -5,6 +5,10 @@ import com.server3.server3.entities.GroceryList;
 public class AddListResponse implements IResponse{
     GroceryList list;
 
+    public GroceryList getList() {
+        return list;
+    }
+
     public AddListResponse(GroceryList list){
         this.list =list;
     }

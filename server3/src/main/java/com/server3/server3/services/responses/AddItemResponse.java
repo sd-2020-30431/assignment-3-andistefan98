@@ -4,6 +4,10 @@ public class AddItemResponse implements IResponse{
 
     int value;
 
+    public int getValue() {
+        return value;
+    }
+
     public AddItemResponse(int value){
         this.value = value;
     }

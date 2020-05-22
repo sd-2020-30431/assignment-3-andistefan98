@@ -4,6 +4,10 @@ public class UpdateGoalResponse implements IResponse{
 
     int goal;
 
+    public int getGoal() {
+        return goal;
+    }
+
     public UpdateGoalResponse(int goal){
         this.goal = goal;
     }

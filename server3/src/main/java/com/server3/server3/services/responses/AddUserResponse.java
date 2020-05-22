@@ -6,6 +6,10 @@ public class AddUserResponse implements IResponse{
 
     User user;
 
+    public User getUser() {
+        return user;
+    }
+
     public AddUserResponse(User user){
         this.user = user;
     }

@@ -6,6 +6,10 @@ public class GetUserByIdResponse implements IResponse{
 
     User user;
 
+    public User getUser() {
+        return user;
+    }
+
     public GetUserByIdResponse(User user){
         this.user = user;
     }

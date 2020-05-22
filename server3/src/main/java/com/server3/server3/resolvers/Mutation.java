@@ -8,6 +8,11 @@ import com.server3.server3.entities.User;
 import com.server3.server3.repositories.ItemRepository;
 import com.server3.server3.repositories.ListRepository;
 import com.server3.server3.repositories.UserRepository;
+import com.server3.server3.services.Mediator;
+import com.server3.server3.services.commands.*;
+import com.server3.server3.services.handlers.IHandler;
+import com.server3.server3.services.queries.GetItemById;
+import com.server3.server3.services.responses.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,51 +24,43 @@ public class Mutation implements GraphQLMutationResolver{
 
     private final ItemRepository itemReposiory ;
     private final ListRepository listRepository ;
+    private Mediator mediator;
     private final UserRepository userRepository;
 
     public int addItem(String listId ,String name, String calorie_value , String quantity , String expiration_date , String purchase_date ,String consump_date){
-        Item itm = new Item();
-        itm.setCalorieValue(Float.parseFloat(calorie_value));
-        itm.setExpirationDate(expiration_date);
-        itm.setList(Integer.parseInt(listId));
-        itm.setName(name);
-        itm.setPurchaseDate(purchase_date);
-        itm.setQuantity(Integer.parseInt(quantity));
-        itm.setConsumptionDate(consump_date);
 
-        itemReposiory.save(itm);
+        AddItemCommand mutation = new AddItemCommand(listId,name,calorie_value,quantity,expiration_date,purchase_date,consump_date);
+        IHandler<AddItemCommand, AddItemResponse> handler = mediator.<AddItemCommand, AddItemResponse>handle(mutation);
+        int val = handler.handle(mutation).getValue();
+        return val;
 
-        return 1;
     }
 
     public int deleteItem(String itemId){
 
-        itemReposiory.deleteById(Integer.parseInt(itemId));
-
-        return 1;
+        DeleteItemCommand mutation = new DeleteItemCommand(itemId);
+        IHandler<DeleteItemCommand, DeleteItemResponse> handler = mediator.<DeleteItemCommand, DeleteItemResponse>handle(mutation);
+        int val = handler.handle(mutation).getValue();
+        return val;
 
     }
 
     public GroceryList addList(String user_id ,String list_name) {
 
-        GroceryList newLst = new GroceryList();
-
-        newLst.setList_name(list_name);
-
-        newLst.setUser_id(Integer.parseInt(user_id));
-        return listRepository.save(newLst);
+        AddListCommand mutation = new AddListCommand(user_id,list_name);
+        IHandler<AddListCommand, AddListResponse> handler = mediator.<AddListCommand, AddListResponse>handle(mutation);
+        GroceryList list = handler.handle(mutation).getList();
+        return list;
 
     }
 
 
     public User addUser(String username, String password){
 
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        newUser.setCaloric_goal(0);
-
-        return userRepository.save(newUser);
+        AddUserCommand mutation = new AddUserCommand(username,password);
+        IHandler<AddUserCommand, AddUserResponse> handler = mediator.<AddUserCommand, AddUserResponse>handle(mutation);
+        User user = handler.handle(mutation).getUser();
+        return user;
 
 
     }
@@ -71,17 +68,10 @@ public class Mutation implements GraphQLMutationResolver{
 
     int updateGoal(String user_id,String new_goal){
 
-        Iterable<User> users =  userRepository.findAll();
-
-        for(User usr : users){
-            if(usr.getId()  - Integer.parseInt(user_id) == 0){
-                usr.setCaloric_goal(Integer.parseInt(new_goal));
-                userRepository.save(usr);
-                break;
-            }
-        }
-
-        return Integer.parseInt(new_goal);
+        UpdateGoalCommand mutation = new  UpdateGoalCommand(user_id,new_goal);
+        IHandler<UpdateGoalCommand, UpdateGoalResponse> handler = mediator.<UpdateGoalCommand, UpdateGoalResponse>handle(mutation);
+        int goal = handler.handle(mutation).getGoal();
+        return goal;
 
 
     }

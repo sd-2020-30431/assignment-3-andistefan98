@@ -10,6 +10,11 @@ import com.server3.server3.entities.User;
 import com.server3.server3.repositories.ItemRepository;
 import com.server3.server3.repositories.ListRepository;
 import com.server3.server3.repositories.UserRepository;
+import com.server3.server3.services.Mediator;
+import com.server3.server3.services.handlers.GetAllItemsHandler;
+import com.server3.server3.services.handlers.IHandler;
+import com.server3.server3.services.queries.*;
+import com.server3.server3.services.responses.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,52 +27,47 @@ import java.util.List;
 public class Query implements GraphQLQueryResolver {
 
     private final ItemRepository itemRepository;
+    private final Mediator mediator;
     private final ListRepository listRepository;
     private final UserRepository userRepository;
 
 
     public Iterable<Item> allItems(String userId) {
-        Iterable<GroceryList> lists = listRepository.findAll();
-        List<GroceryList> reqLists = new ArrayList<>();
-        Iterable<Item> allItems = itemRepository.findAll();
-        List<Item> reqItems = new ArrayList<>();
-
-        for(GroceryList lst : lists){
-            int idd = lst.getUser_id();
-            if( Integer.parseInt(userId) - idd == 0 ){
-                reqLists.add(lst);
-            }
-        }
-
-        for(Item itm : allItems){
-
-            int itmList = itm.getList();
-            for(GroceryList lst : reqLists){
-                if(itmList - lst.getList_id() == 0){
-                    reqItems.add(itm);
-                }
-            }
-        }
-
-        return reqItems;
+        GetAllItems query = new GetAllItems(userId);
+        IHandler<GetAllItems, GetAllItemsResponse> handler = mediator.<GetAllItems, GetAllItemsResponse>handle(query);
+        Iterable<Item> allItemsReq  = handler.handle(query).getItems();
+        return allItemsReq;
 
     }
 
     public Iterable<GroceryList> allLists() {
-        return listRepository.findAll();
+        GetAllLists query = new GetAllLists();
+        IHandler<GetAllLists, GetAllListsResponse> handler = mediator.<GetAllLists, GetAllListsResponse>handle(query);
+        Iterable<GroceryList> allLists  = handler.handle(query).getLists();
+        return allLists;
     }
 
+
     Item findItemById(int itemId ){
-        return itemRepository.findById(itemId).get();
+        GetItemById query = new GetItemById(itemId);
+        IHandler<GetItemById, GetItemByIdResponse> handler = mediator.<GetItemById, GetItemByIdResponse>handle(query);
+        Item item = handler.handle(query).getItem();
+        return item;
     }
 
     GroceryList findListById(int listId ){
-        return listRepository.findById(listId).get();
+        GetListById query = new GetListById(listId);
+        IHandler<GetListById, GetListByIdResponse> handler = mediator.<GetListById, GetListByIdResponse>handle(query);
+        GroceryList list = handler.handle(query).getList();
+        return list;
     }
 
 
     User findUserById(int id){
-        return userRepository.findById(id).get();
+        GetUserById query = new GetUserById(id);
+        IHandler<GetUserById, GetUserByIdResponse> handler = mediator.<GetUserById, GetUserByIdResponse>handle(query);
+        User user = handler.handle(query).getUser();
+        return user;
     }
 
 

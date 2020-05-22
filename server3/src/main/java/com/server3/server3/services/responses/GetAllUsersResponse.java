@@ -6,6 +6,10 @@ public class GetAllUsersResponse implements IResponse{
 
     Iterable<User> users;
 
+    public Iterable<User> getUsers() {
+        return users;
+    }
+
     public GetAllUsersResponse(Iterable<User> usrs){
         this.users = usrs;
     }
