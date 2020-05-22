@@ -1,0 +1,45 @@
+type Mutation {
+    addItem(listId : String,name: String, calorie_value:String , quantity: String ,expiration_date : String, purchase_date: String ,consump_date : String): Int
+    deleteItem(itemId : String): Int
+    addList(user_id: String, list_name: String): GroceryList
+    addUser(username: String, password:String): User
+    updateGoal(user_id: String, new_goal: String) : Int
+}
+
+
+type Query {
+    allItems(userId : String): [Item]
+    allLists:[GroceryList]
+    findItemById(itemId :Int): Item
+    findListById(listId: Int) :GroceryList
+    findUserById(id: Int) :  User
+    allUsers:[User]
+
+}
+
+
+type Item {
+    id: Int
+    name: String
+    quantity: Int
+    calorieValue: Float
+    purchaseDate: String
+    expirationDate: String
+    consumptionDate: String
+    list : Int
+}
+
+
+type GroceryList{
+    list_id: Int
+    list_name: String
+    user_id : Int
+}
+
+
+type User{
+    id : Int
+    caloric_goal: Float
+    password: String
+    username : String
+}
