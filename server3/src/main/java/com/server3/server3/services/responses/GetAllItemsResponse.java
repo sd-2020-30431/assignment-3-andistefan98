@@ -10,8 +10,8 @@ public class GetAllItemsResponse implements IResponse{
         return items;
     }
 
-    public GetAllItemsResponse(Iterable<Item> itm){
-        this.items =itm;
+    public GetAllItemsResponse(Iterable<Item> items){
+        this.items =items;
     }
 
 }

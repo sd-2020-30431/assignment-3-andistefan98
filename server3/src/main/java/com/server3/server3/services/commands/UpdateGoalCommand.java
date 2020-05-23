@@ -17,6 +17,7 @@ public class UpdateGoalCommand implements IRequest {
 
     public UpdateGoalCommand(String id, String goal){
         this.user_id = id;
+        System.out.println("new goal " + goal);
         this.new_goal = goal;
     }
 

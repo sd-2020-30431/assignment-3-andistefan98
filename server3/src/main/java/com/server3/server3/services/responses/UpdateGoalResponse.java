@@ -8,8 +8,8 @@ public class UpdateGoalResponse implements IResponse{
         return goal;
     }
 
-    public UpdateGoalResponse(int goal){
-        this.goal = goal;
+    public UpdateGoalResponse(int goall){
+        this.goal = goall;
     }
 
 }

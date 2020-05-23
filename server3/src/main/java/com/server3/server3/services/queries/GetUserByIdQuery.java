@@ -1,6 +1,6 @@
 package com.server3.server3.services.queries;
 
-public class GetUserById implements IRequest{
+public class GetUserByIdQuery implements IRequest{
 
     int idUser;
 
@@ -12,7 +12,7 @@ public class GetUserById implements IRequest{
         this.idUser = idUser;
     }
 
-    public GetUserById(int id){
+    public GetUserByIdQuery(int id){
         this.idUser = id;
 
     }

@@ -4,9 +4,10 @@ import com.server3.server3.entities.GroceryList;
 import com.server3.server3.entities.Item;
 import com.server3.server3.repositories.ItemRepository;
 import com.server3.server3.repositories.ListRepository;
-import com.server3.server3.services.queries.GetAllItems;
+import com.server3.server3.services.queries.GetAllItemsQuery;
 import com.server3.server3.services.responses.GetAllItemsResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,18 +15,22 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class GetAllItemsHandler implements IHandler<GetAllItems, GetAllItemsResponse> {
-
+public class GetAllItemsHandler implements IHandler<GetAllItemsQuery, GetAllItemsResponse> {
+    @Autowired
     private ItemRepository itemRepository;
+    @Autowired
     private  ListRepository listRepository;
+    public GetAllItemsHandler(ListRepository listRepository , ItemRepository itemRepository) {
+        this.listRepository = listRepository;
+        this.itemRepository = itemRepository;
+    }
 
     @Override
-    public GetAllItemsResponse handle(GetAllItems q) {
+    public GetAllItemsResponse handle(GetAllItemsQuery q) {
         Iterable<GroceryList> lists = listRepository.findAll();
         List<GroceryList> reqLists = new ArrayList<>();
         Iterable<Item> allItems = itemRepository.findAll();
         List<Item> reqItems = new ArrayList<>();
-
         for(GroceryList lst : lists){
             int idd = lst.getUser_id();
             if( Integer.parseInt(q.getUserId()) - idd == 0 ){

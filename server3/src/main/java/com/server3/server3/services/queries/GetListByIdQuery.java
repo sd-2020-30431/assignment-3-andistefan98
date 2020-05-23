@@ -1,6 +1,6 @@
 package com.server3.server3.services.queries;
 
-public class GetListById implements IRequest{
+public class GetListByIdQuery implements IRequest{
 
     int listId;
 
@@ -12,7 +12,7 @@ public class GetListById implements IRequest{
         this.listId = listId;
     }
 
-    public GetListById(int id){
+    public GetListByIdQuery(int id){
         this.listId = id;
     }
 
