@@ -20,7 +20,7 @@ public class DeleteItemHandler implements IHandler<DeleteItemCommand, DeleteItem
     @Override
     public DeleteItemResponse handle(DeleteItemCommand q) {
 
-        System.out.println("Item id " + q.getItemId());
+
         itemRepository.deleteById(Integer.parseInt(q.getItemId()));
 
         return new DeleteItemResponse(1);

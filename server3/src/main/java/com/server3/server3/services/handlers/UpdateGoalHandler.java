@@ -20,7 +20,7 @@ public class UpdateGoalHandler implements  IHandler<UpdateGoalCommand, UpdateGoa
 
     @Override
     public UpdateGoalResponse handle(UpdateGoalCommand q) {
-        System.out.println("new goal in handler" + q.getNew_goal());
+
         Iterable<User> users =  userRepository.findAll();
 
         for(User usr : users){

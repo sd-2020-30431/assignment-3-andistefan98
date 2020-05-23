@@ -120,8 +120,7 @@ public class GoalFrame {
 		});
 		panel.add(backBtn);
 		
-		
-		
+				
 	}
 
 	public void setVisible(boolean b) {

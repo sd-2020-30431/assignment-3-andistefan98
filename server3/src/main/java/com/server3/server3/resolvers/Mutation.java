@@ -66,7 +66,6 @@ public class Mutation implements GraphQLMutationResolver{
 
         UpdateGoalCommand query = new  UpdateGoalCommand(user_id,new_goal);
         IHandler<UpdateGoalCommand, UpdateGoalResponse> handler = mediator.<UpdateGoalCommand, UpdateGoalResponse>getHandler(query);
-       System.out.println("\nOUT OF GOAL");
         int goal = handler.handle(query).getGoal();
         return goal;
 

@@ -32,7 +32,6 @@ public class Mediator implements ApplicationContextAware {
         handler.put(AddListCommand.class,AddListHandler.class);
         handler.put(AddUserCommand.class,AddUserHandler.class);
         handler.put(DeleteItemCommand.class,DeleteItemHandler.class);
-        System.out.println("AICIII");
         handler.put(UpdateGoalCommand.class,UpdateGoalHandler.class);
 
     }
