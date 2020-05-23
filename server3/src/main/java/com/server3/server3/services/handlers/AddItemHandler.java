@@ -4,12 +4,18 @@ import com.server3.server3.entities.Item;
 import com.server3.server3.repositories.ItemRepository;
 import com.server3.server3.services.commands.AddItemCommand;
 import com.server3.server3.services.responses.AddItemResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AddItemHandler implements IHandler<AddItemCommand, AddItemResponse> {
 
+    @Autowired
     private ItemRepository itemRepository;
+
+    public AddItemHandler(ItemRepository itemRepository){
+        this.itemRepository = itemRepository;
+    }
 
 
     @Override
